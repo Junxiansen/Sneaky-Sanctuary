@@ -1,195 +1,247 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>偷偷摸摸的庇护所</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>隐秘圣所 - 放置类游戏</title>
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="game-container">
-        <!-- 游戏加载屏幕 -->
-        <div id="loading-screen">
-            <h1>偷偷摸摸的庇护所</h1>
-            <h2>偷偷摸摸的庇护所</h2>
-            <div class="loading-bar">
-                <div class="loading-progress"></div>
+    <div class="game-container">
+        <!-- 顶部导航栏 -->
+        <header class="top-nav">
+            <div class="logo-area">
+                <i class="fas fa-dungeon fa-2x logo"></i>
+                <h1>隐秘圣所</h1>
             </div>
-            <p>正在加载游戏资源...</p>
-        </div>
-
-        <!-- 主菜单 -->
-        <div id="main-menu" class="hidden">
-            <h1>偷偷摸摸的庇护所</h1>
-            <h2>偷偷摸摸的庇护所</h2>
-            <div class="menu-buttons">
-                <button id="new-game-btn">新的冒险</button>
-                <button id="continue-btn" disabled>继续冒险</button>
-                <button id="settings-btn">设置</button>
-                <button id="credits-btn">制作团队</button>
+            <div class="current-activity">
+                <div class="activity-icon">
+                    <i class="fas fa-tree"></i>
+                </div>
+                <span class="activity-name">伐木</span>
             </div>
-        </div>
-
-        <!-- 游戏主界面 -->
-        <div id="game-main" class="hidden">
-            <!-- 顶部资源栏 -->
-            <div id="resources-bar">
-                <div class="resource">
-                    <i class="fas fa-drumstick-bite"></i>
-                    <span id="food-value">0</span>
-                </div>
-                <div class="resource">
-                    <i class="fas fa-coins"></i>
-                    <span id="gold-value">0</span>
-                </div>
-                <div class="resource">
-                    <i class="fas fa-magic"></i>
-                    <span id="magic-value">0</span>
+            <div class="nav-controls">
+                <div class="timer">00h00m47s</div>
+                <button class="save-btn">强制保存</button>
+                <button class="clear-btn" id="clear-data"><i class="fas fa-trash"></i> 清除数据</button>
+                <button class="settings-btn"><i class="fas fa-cog"></i></button>
+                <div class="language-selector">
+                    <select>
+                        <option value="zh">中文</option>
+                        <option value="en">English</option>
+                    </select>
                 </div>
             </div>
+        </header>
 
-            <!-- 中间内容区域 -->
-            <div id="main-content">
-                <!-- 左侧导航 -->
-                <div id="side-nav">
-                    <div class="nav-item active" data-target="sanctuary-view">
-                        <i class="fas fa-home"></i>
-                        <span>避难所</span>
+        <!-- 游戏主体 -->
+        <div class="game-body">
+            <!-- 左侧菜单栏 -->
+            <aside class="left-sidebar">
+                <div class="sidebar-section">
+                    <div class="section-header">
+                        <i class="fas fa-store"></i> 商店
                     </div>
-                    <div class="nav-item" data-target="characters-view">
-                        <i class="fas fa-users"></i>
-                        <span>角色</span>
-                    </div>
-                    <div class="nav-item" data-target="tasks-view">
-                        <i class="fas fa-tasks"></i>
-                        <span>任务</span>
-                    </div>
-                    <div class="nav-item" data-target="buildings-view">
-                        <i class="fas fa-building"></i>
-                        <span>建筑</span>
-                    </div>
-                    <div class="nav-item" data-target="story-view">
-                        <i class="fas fa-book-open"></i>
-                        <span>故事</span>
-                    </div>
-                </div>
-
-                <!-- 右侧内容区域 -->
-                <div id="content-area">
-                    <!-- 避难所视图 -->
-                    <div id="sanctuary-view" class="content-view">
-                        <h2>避难所总览</h2>
-                        <div class="sanctuary-map">
-                            <!-- 这里放置避难所地图的可视化内容 -->
-                            <div id="map-container">
-                                <!-- 地图将在这里动态生成 -->
-                            </div>
-                        </div>
-                        <div class="status-summary">
-                            <h3>状态摘要</h3>
-                            <p>居民: <span id="residents-count">0</span>/10</p>
-                            <p>建筑: <span id="buildings-count">0</span>/5</p>
-                            <p>任务: <span id="active-tasks">0</span> 进行中</p>
-                        </div>
-                    </div>
-
-                    <!-- 角色视图 -->
-                    <div id="characters-view" class="content-view hidden">
-                        <h2>角色管理</h2>
-                        <div class="character-list">
-                            <!-- 角色列表将通过JS动态生成 -->
-                            <div class="empty-state">
-                                <p>尚未招募角色。完成任务来招募你的第一个角色！</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 任务视图 -->
-                    <div id="tasks-view" class="content-view hidden">
-                        <h2>任务中心</h2>
-                        <div class="task-categories">
-                            <div class="task-category active" data-category="main">主线任务</div>
-                            <div class="task-category" data-category="daily">日常任务</div>
-                            <div class="task-category" data-category="special">特殊任务</div>
-                        </div>
-                        <div class="task-list">
-                            <!-- 任务列表将通过JS动态生成 -->
-                            <div class="task-item">
-                                <h3>新的开始</h3>
-                                <p>探索避难所周围的环境，寻找可用资源。</p>
-                                <div class="task-rewards">
-                                    <span><i class="fas fa-coins"></i> 50</span>
-                                    <span><i class="fas fa-drumstick-bite"></i> 30</span>
-                                </div>
-                                <button class="task-btn">开始任务</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 建筑视图 -->
-                    <div id="buildings-view" class="content-view hidden">
-                        <h2>建筑管理</h2>
-                        <div class="building-grid">
-                            <!-- 建筑列表将通过JS动态生成 -->
-                            <div class="empty-state">
-                                <p>还没有建筑。建造你的第一个建筑来增强避难所！</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 故事视图 -->
-                    <div id="story-view" class="content-view hidden">
-                        <h2>故事记录</h2>
-                        <div class="story-log">
-                            <!-- 故事记录将通过JS动态生成 -->
-                            <div class="story-entry">
-                                <h3>序章：被遗忘的避难所</h3>
-                                <p>你偶然发现了这个几乎被废弃的避难所。它曾经一定十分繁荣，但现在只剩下残垣断壁和零星的痕迹。是什么导致了它的衰落？为什么所有人都离开了？这些秘密等待着你去揭开...</p>
-                            </div>
+                    <div class="section-content">
+                        <div class="resource-display">
+                            <i class="fas fa-coins"></i> <span id="gold-amount">0</span>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 底部状态栏 -->
-            <div id="status-bar">
-                <div class="time-display">
-                    <i class="fas fa-clock"></i>
-                    <span id="game-time">第1天 00:00</span>
+                <div class="sidebar-section">
+                    <div class="section-header">
+                        <i class="fas fa-box"></i> 仓库
+                    </div>
+                    <div class="section-content">
+                        <div class="resource-display">
+                            <span id="inventory-space">1 / 20</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="quick-actions">
-                    <button id="save-btn"><i class="fas fa-save"></i> 保存</button>
-                    <button id="menu-btn"><i class="fas fa-bars"></i> 菜单</button>
-                </div>
-            </div>
-        </div>
 
-        <!-- 对话框容器 -->
-        <div id="dialog-container" class="hidden">
-            <div class="dialog-box">
-                <div class="dialog-header">
-                    <h3 id="dialog-title">对话标题</h3>
-                    <button class="close-dialog-btn">&times;</button>
+                <div class="sidebar-section">
+                    <div class="section-header">
+                        <i class="fas fa-fist-raised"></i> 战斗
+                    </div>
+                    <div class="section-content">
+                        <div class="stat-item">
+                            <i class="fas fa-sword"></i> 攻击 <span id="attack-level">1 / 120</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-dumbbell"></i> 力量 <span id="strength-level">1 / 120</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shield-alt"></i> 防御 <span id="defense-level">1 / 120</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-heart"></i> 生命值 <span id="health-level">10 / 120</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-bullseye"></i> 远程 <span id="ranged-level">1 / 120</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-hat-wizard"></i> 魔法 <span id="magic-level">1 / 120</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="dialog-content" id="dialog-content">
-                    <!-- 对话内容将通过JS填充 -->
+
+                <div class="sidebar-section">
+                    <div class="section-header">
+                        <i class="fas fa-hammer"></i> 技能
+                    </div>
+                    <div class="section-content">
+                        <div class="skill-item active">
+                            <i class="fas fa-tree"></i> 伐木 <span id="woodcutting-level">1 / 120</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-gem"></i> 采矿 <span id="mining-level">1 / 120</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-seedling"></i> 农务 <span id="farming-level">1 / 120</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-city"></i> 城镇 <span id="town-level">4 / 120</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="dialog-footer">
-                    <button id="dialog-confirm-btn">确定</button>
-                    <button id="dialog-cancel-btn">取消</button>
+            </aside>
+
+            <!-- 主内容区 -->
+            <main class="main-content">
+                <div class="content-header">
+                    <div class="skill-progress">
+                        <div class="level-display">
+                            技能等级: <span id="current-skill-level">1</span> / 120
+                        </div>
+                        <div class="xp-display">
+                            技能经验值: <span id="current-skill-xp">0</span> / 83
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <div class="content-message">
+                    加载游戏数据中，请稍候...
+                </div>
+
+                <div class="resource-grid">
+                    <!-- 普通树 -->
+                    <div class="resource-item active">
+                        <div class="resource-header">
+                            <span class="resource-name">普通树</span>
+                        </div>
+                        <div class="resource-image">
+                            <i class="fas fa-tree fa-4x"></i>
+                        </div>
+                        <div class="resource-info">
+                            10 经验 / 3 秒
+                        </div>
+                        <div class="resource-progress">
+                            <div class="progress-bar" id="normal-tree-progress"></div>
+                        </div>
+                        <div class="resource-xp">
+                            0 / 83
+                        </div>
+                        <div class="resource-actions">
+                            <button class="action-btn" id="gathering-btn">
+                                <i class="fas fa-play" id="gathering-icon"></i> <span id="gathering-text">开始采集</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 锁定的树木 -->
+                    <div class="resource-item locked">
+                        <div class="resource-header">
+                            <span class="resource-name">Locked</span>
+                        </div>
+                        <div class="resource-image">
+                            <i class="fas fa-lock fa-4x"></i>
+                        </div>
+                        <div class="resource-info">
+                            等级 10
+                        </div>
+                    </div>
+
+                    <!-- 锁定的树木 -->
+                    <div class="resource-item locked">
+                        <div class="resource-header">
+                            <span class="resource-name">Locked</span>
+                        </div>
+                        <div class="resource-image">
+                            <i class="fas fa-lock fa-4x"></i>
+                        </div>
+                        <div class="resource-info">
+                            等级 25
+                        </div>
+                    </div>
+
+                    <!-- 锁定的树木 -->
+                    <div class="resource-item locked">
+                        <div class="resource-header">
+                            <span class="resource-name">Locked</span>
+                        </div>
+                        <div class="resource-image">
+                            <i class="fas fa-lock fa-4x"></i>
+                        </div>
+                        <div class="resource-info">
+                            等级 35
+                        </div>
+                    </div>
+
+                    <!-- 更多锁定的树木 -->
+                    <div class="resource-item locked">
+                        <div class="resource-header">
+                            <span class="resource-name">Locked</span>
+                        </div>
+                        <div class="resource-image">
+                            <i class="fas fa-lock fa-4x"></i>
+                        </div>
+                        <div class="resource-info">
+                            等级 40
+                        </div>
+                    </div>
+
+                    <div class="resource-item locked">
+                        <div class="resource-header">
+                            <span class="resource-name">Locked</span>
+                        </div>
+                        <div class="resource-image">
+                            <i class="fas fa-lock fa-4x"></i>
+                        </div>
+                        <div class="resource-info">
+                            等级 45
+                        </div>
+                    </div>
+
+                    <div class="resource-item locked">
+                        <div class="resource-header">
+                            <span class="resource-name">Locked</span>
+                        </div>
+                        <div class="resource-image">
+                            <i class="fas fa-lock fa-4x"></i>
+                        </div>
+                        <div class="resource-info">
+                            等级 55
+                        </div>
+                    </div>
+
+                    <div class="resource-item locked">
+                        <div class="resource-header">
+                            <span class="resource-name">Locked</span>
+                        </div>
+                        <div class="resource-image">
+                            <i class="fas fa-lock fa-4x"></i>
+                        </div>
+                        <div class="resource-info">
+                            等级 60
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 
-    <!-- 游戏脚本 -->
-    <script src="js/data.js"></script>
-    <script src="js/characters.js"></script>
-    <script src="js/tasks.js"></script>
-    <script src="js/buildings.js"></script>
-    <script src="js/story.js"></script>
-    <script src="js/game.js"></script>
+    <script src="game.js"></script>
 </body>
 </html> 
