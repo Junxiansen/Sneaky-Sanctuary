@@ -1,4 +1,5 @@
 // 游戏数据
+5454545
 const gameData = {
     player: {
         gold: 0,
